@@ -115,7 +115,9 @@ def evaluate_resource_provision(
         ) * 24
         fargate_tier = f"Fargate tier {provision_result[1]['cpu']:.2f} vCPU, {provision_result[1]['memory']:.2f} GB [${fargate_cost_per_day:.2f}/day]"
 
-        st.success(f"The resources provisioned are optimal ✅  \n  - {fargate_tier}")
+        st.success(
+            f"The resources requested and provisioned are optimal ✅  \n  - {fargate_tier}"
+        )
     else:
         optimal_cpu_1, optimal_memory_1, fargate_tier_1, delta_1 = (
             calculate_optimal_request(
@@ -136,7 +138,7 @@ def evaluate_resource_provision(
         )
 
         st.warning(
-            "The resources provisioned are not optimal ⚠️  \n"
+            "The resources request and provisioned are not optimal ⚠️  \n"
             "Choose either options:  \n"
             f"- {fargate_tier_1}\n"
             f"   - {delta_1}\n"
