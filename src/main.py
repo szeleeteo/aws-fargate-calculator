@@ -24,7 +24,7 @@ st.set_page_config(
     page_title=TITLE,
     page_icon=":material/calculate:",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 
@@ -186,20 +186,25 @@ def calculate_optimal_request(
 def main():
     st.title(TITLE)
 
-    if st.toggle("Show Fargate resources available", value=False):
-        st.markdown(RESOURCES_TABLE_MD)
-        st.caption(
-            "[AWS Docs Reference](https://docs.aws.amazon.com/eks/latest/userguide/fargate-pod-configuration.html#fargate-cpu-and-memory)"
-        )
-    if st.toggle(
-        "Show Fargate costs for ap-southeast-1 region (Singapore)", value=False
-    ):
-        st.markdown(
-            rf"\${PER_VCPU_COST_PER_HOUR} per vCPU per hour"
-            "  \n"
-            rf"\${PER_GB_COST_PER_HOUR} per GB per hour"
-        )
-    show_sidecar_config = st.toggle("Show optimization with sidecar", value=False)
+    with st.sidebar:
+        if st.toggle("Show available Fargate resources", value=False):
+            st.markdown(RESOURCES_TABLE_MD)
+            st.caption(
+                "Based on [AWS Docs Reference](https://docs.aws.amazon.com/eks/latest/userguide/fargate-pod-configuration.html#fargate-cpu-and-memory)"
+            )
+        if st.toggle("Show Fargate pricing", value=False):
+            st.markdown(
+                f"""\
+                | Resource            | Price                     |
+                |---------------------|---------------------------|
+                | per vCPU per hour   | ${PER_VCPU_COST_PER_HOUR} |
+                | per GB per hour     | ${PER_GB_COST_PER_HOUR}   |
+                """
+            )
+            st.caption(
+                "Based on [AWS Fargate Pricing](https://aws.amazon.com/fargate/pricing/) for **Linux/x86, Asia Pacific (Singapore) region**"
+            )
+        show_sidecar_config = st.toggle("Show optimization with sidecar", value=False)
 
     left_col, right_col = st.columns(2)
     default_tile = left_col.container(border=True)
