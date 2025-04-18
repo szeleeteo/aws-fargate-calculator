@@ -139,13 +139,13 @@ def evaluate_resource_provision(
 
         st.warning(
             "The resources request and provisioned are not optimal ⚠️  \n"
-            "Choose either options:  \n"
+            "Choose one of the following options:\n"
             f"- {fargate_tier_1}\n"
-            f"   - {delta_1}\n"
             f"   - Request for **{optimal_cpu_1} vCPU, {optimal_memory_1} GB**\n"
+            f"   - {delta_1}\n"
             f"- {fargate_tier_2}\n"
-            f"   - {delta_2}\n"
-            f"   - Request for **{optimal_cpu_2} vCPU, {optimal_memory_2} GB**  \n\n"
+            f"   - Request for **{optimal_cpu_2} vCPU, {optimal_memory_2} GB**\n"
+            f"   - {delta_2}\n\n"
             "👉🏻 Note that cpu is 10x more expensive than memory per unit per hour, so it is better to choose memory increase if cpu stay put!)"
         )
 
@@ -168,25 +168,19 @@ def calculate_optimal_request(
     delta_memory = optimal_memory_request - memory_request_service
 
     delta = ""
-    if delta_cpu > 0.0:
-        delta = f"⬆️ {delta_cpu:.2f} vCPU"
-    elif delta_cpu < 0.0:
-        delta = f"⬇️ {-delta_cpu:.2f} vCPU"
+    if delta_cpu != 0:
+        delta = f"{'+' if delta_cpu > 0 else ''}{delta_cpu:.2f} vCPU"
 
-    if delta_memory > 0.0:
+    if delta_memory != 0:
         if delta:
             delta = f"{delta}, "
-        delta = f"{delta} ⬆️ {delta_memory:.2f} GB"
-    elif delta_memory < 0.0:
-        if delta:
-            delta = f"{delta}, "
-        delta = f"{delta} ⬇️ {-delta_memory:.2f} GB"
+        delta = f"{delta} {'+' if delta_memory > 0 else ''}{delta_memory:.2f} GB"
 
     return optimal_cpu_request, optimal_memory_request, fargate_tier, delta
 
 
 def main():
-    st.title(TITLE)
+    st.header(TITLE)
 
     with st.sidebar:
         if st.toggle("Show available Fargate resources", value=False):
@@ -206,7 +200,7 @@ def main():
             st.caption(
                 "Based on [AWS Fargate Pricing](https://aws.amazon.com/fargate/pricing/) for **Linux/x86, Asia Pacific (Singapore) region**"
             )
-        show_sidecar_config = st.toggle("Show optimization with sidecar", value=False)
+        show_sidecar_config = st.toggle("Show optimization with sidecar", value=True)
 
     left_col, right_col = st.columns(2)
     default_tile = left_col.container(border=True)
