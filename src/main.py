@@ -6,13 +6,13 @@ import streamlit as st
 import fargate as fg
 from fargate import Resource
 
-TITLE = "AWS Fargate Calculator for Resource Optimization"
+TITLE = "AWS Fargate Calculator"
 PADDING_HEIGHT = 68
 
 
 st.set_page_config(
     page_title=TITLE,
-    page_icon=":material/calculate:",
+    page_icon=":fire:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -158,7 +158,7 @@ def main():
     st.header(TITLE)
 
     with st.sidebar:
-        if st.toggle("Show Fargate resources combinations"):
+        if st.toggle("Show Fargate tiers"):
             st.markdown(fg.RESOURCES_TABLE_MD)
             st.caption(fg.RESOURCES_TABLE_CAPTION)
         if st.toggle("Show Fargate pricing"):
