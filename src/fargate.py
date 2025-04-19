@@ -125,3 +125,7 @@ def get_alt_tier_resource(
                 return max(lower_candidate_resources, key=lambda x: x.memory)
 
     return fargate_resource
+
+
+def get_cost_per_day(cpu: float, memory: float) -> float:
+    return (cpu * PER_VCPU_COST_PER_HOUR + memory * PER_GB_COST_PER_HOUR) * 24

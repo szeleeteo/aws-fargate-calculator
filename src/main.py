@@ -92,10 +92,9 @@ def evaluate_resource_provision(
     ) = provision_result
 
     if surplus_resources.cpu == 0 and surplus_resources.memory == 0:
-        fargate_cost_per_day = (
-            fargate_provision.cpu * fg.PER_VCPU_COST_PER_HOUR
-            + fargate_provision.memory * fg.PER_GB_COST_PER_HOUR
-        ) * 24
+        fargate_cost_per_day = fg.get_cost_per_day(
+            fargate_provision.cpu, fargate_provision.memory
+        )
         fargate_tier = f"Fargate tier {fargate_provision.cpu:.2f} vCPU, {fargate_provision.memory:.2f} GB [${fargate_cost_per_day:.2f}/day]"
         st.success(
             f"The resources requested and provisioned are optimal ✅  \n  - {fargate_tier}"
@@ -114,13 +113,14 @@ def evaluate_resource_provision(
             surplus_resources=alt_surplus_resources,
         )
 
+        if option_1 == option_2:
+            option_2 = ""
+
         st.warning(
             "The resources request and provisioned are not optimal ⚠️  \n"
             "Choose one of the following options:  \n"
             f"{option_1}"
             f"{option_2}"
-            "\n\n👉🏻 Note that cpu (per unit per hour) is 10x more expensive than memory, "
-            "so it is far cheaper to choose memory given choice increasing between either"
         )
 
 
@@ -132,10 +132,9 @@ def derive_optimal_request_options(
 ):
     optimal_cpu_request = cpu_request_service + surplus_resources.cpu
     optimal_memory_request = memory_request_service + surplus_resources.memory
-    fargate_cost_per_day = (
-        fargate_provision.cpu * fg.PER_VCPU_COST_PER_HOUR
-        + fargate_provision.memory * fg.PER_GB_COST_PER_HOUR
-    ) * 24
+    fargate_cost_per_day = fg.get_cost_per_day(
+        fargate_provision.cpu, fargate_provision.memory
+    )
     fargate_tier = rf"Fargate tier {fargate_provision.cpu:.2f} vCPU, {fargate_provision.memory:.2f} GB [\${fargate_cost_per_day:.2f}/day]"
 
     delta_cpu = optimal_cpu_request - cpu_request_service
