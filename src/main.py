@@ -10,12 +10,7 @@ TITLE = "AWS Fargate Calculator"
 PADDING_HEIGHT = 68
 
 
-st.set_page_config(
-    page_title=TITLE,
-    page_icon=":fire:",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+st.set_page_config(page_title=TITLE, layout="wide", initial_sidebar_state="expanded")
 
 
 def calculate_resource_utilization(
