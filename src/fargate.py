@@ -1,4 +1,3 @@
-# Import standard library modules
 from dataclasses import dataclass
 
 CPU_MIN = 0.25

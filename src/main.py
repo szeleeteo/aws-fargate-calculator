@@ -1,8 +1,6 @@
-# Import third-party library modules
 import pandas as pd
 import streamlit as st
 
-# Import local modules
 import fargate as fg
 from fargate import Resource
 

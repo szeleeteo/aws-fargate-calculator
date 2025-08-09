@@ -142,9 +142,6 @@ requires-dist = [
     { name = "watchdog", specifier = ">=6.0.0" },
 ]
 
-[package.metadata.requires-dev]
-dev = []
-
 [[package]]
 name = "gitdb"
 version = "4.0.12"

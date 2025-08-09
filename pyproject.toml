@@ -9,16 +9,8 @@ dependencies = [
     "watchdog>=6.0.0",
 ]
 
-[tool.isort]
-profile = "black"
-import_heading_stdlib="Import standard library modules"
-import_heading_thirdparty="Import third-party library modules"
-import_heading_firstparty="Import local modules"
-
+# https://docs.astral.sh/ruff/configuration/#configuring-ruff
 [tool.ruff]
 line-length = 88
 indent-width = 4
 target-version = "py311"
-
-[dependency-groups]
-dev = []
