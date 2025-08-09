@@ -88,7 +88,7 @@ def evaluate_resource_provision(
         fargate_cost_per_day = fg.get_cost_per_day(
             fargate_provision.cpu, fargate_provision.memory
         )
-        fargate_tier = f"Fargate tier {fargate_provision.cpu:.2f} vCPU, {fargate_provision.memory:.2f} GB [${fargate_cost_per_day:.2f}/day]"
+        fargate_tier = rf"Fargate tier {fargate_provision.cpu:.2f} vCPU, {fargate_provision.memory:.2f} GB [\${fargate_cost_per_day:.2f}/day]"
         st.success(
             f"The resources requested and provisioned are optimal ✅  \n  - {fargate_tier}"
         )
@@ -110,7 +110,7 @@ def evaluate_resource_provision(
             option_2 = ""
 
         st.warning(
-            "The resources request and provisioned are not optimal ⚠️  \n"
+            "The resources requested and provisioned are not optimal ⚠️  \n"
             "Choose one of the following options:  \n"
             f"{option_1}"
             f"{option_2}"
@@ -201,15 +201,18 @@ def main():
             )
 
         st.container(height=PADDING_HEIGHT, border=False)
-        result_default = calculate_resource_utilization(
-            cpu_request_service=cpu_request_service,
-            memory_request_service=memory_request_service,
-            memory_reserved_k8s=memory_reserved_k8s,
-        )
-        display_resource_table(result_default)
-        evaluate_resource_provision(
-            cpu_request_service, memory_request_service, result_default
-        )
+        try:
+            result_default = calculate_resource_utilization(
+                cpu_request_service=cpu_request_service,
+                memory_request_service=memory_request_service,
+                memory_reserved_k8s=memory_reserved_k8s,
+            )
+            display_resource_table(result_default)
+            evaluate_resource_provision(
+                cpu_request_service, memory_request_service, result_default
+            )
+        except ValueError as exc:
+            st.error(str(exc))
 
     if show_sidecar_config:
         sidecar_tile.subheader("With sidecar")
@@ -240,42 +243,47 @@ def main():
                     step=fg.CPU_MEMORY_SIDECAR_STEP,
                     key="cpu_reserved_sidecar",
                 )
-                with sidecar_right_col:
-                    memory_request_service_new = st.number_input(
-                        label="Memory request (service)",
-                        value=memory_request_service,
-                        min_value=fg.MEMORY_MIN,
-                        max_value=fg.MEMORY_MAX,
-                        step=fg.CPU_MEMORY_STEP,
-                        key="memory_request_service_new",
-                    )
-                    memory_reserved_k8s_new = st.number_input(
-                        label="Memory reserved (k8s components)",
-                        value=fg.MEMORY_RESERVED_DEFAULT,
-                        min_value=fg.MEMORY_RESERVED_DEFAULT,
-                        max_value=fg.MEMORY_RESERVED_DEFAULT,
-                        key="memory_reserved_k8s_new",
-                    )
-                    memory_reserved_sidecar = st.number_input(
-                        label="Memory reserved (sidecar)",
-                        value=fg.MEMORY_SIDECAR_DEFAULT,
-                        min_value=fg.MEMORY_SIDECAR_MIN,
-                        max_value=fg.MEMORY_SIDECAR_MAX,
-                        step=fg.CPU_MEMORY_SIDECAR_STEP,
-                        key="memory_reserved_sidecar",
-                    )
+            with sidecar_right_col:
+                memory_request_service_new = st.number_input(
+                    label="Memory request (service)",
+                    value=memory_request_service,
+                    min_value=fg.MEMORY_MIN,
+                    max_value=fg.MEMORY_MAX,
+                    step=fg.CPU_MEMORY_STEP,
+                    key="memory_request_service_new",
+                )
+                memory_reserved_k8s_new = st.number_input(
+                    label="Memory reserved (k8s components)",
+                    value=fg.MEMORY_RESERVED_DEFAULT,
+                    min_value=fg.MEMORY_RESERVED_DEFAULT,
+                    max_value=fg.MEMORY_RESERVED_DEFAULT,
+                    key="memory_reserved_k8s_new",
+                )
+                memory_reserved_sidecar = st.number_input(
+                    label="Memory reserved (sidecar)",
+                    value=fg.MEMORY_SIDECAR_DEFAULT,
+                    min_value=fg.MEMORY_SIDECAR_MIN,
+                    max_value=fg.MEMORY_SIDECAR_MAX,
+                    step=fg.CPU_MEMORY_SIDECAR_STEP,
+                    key="memory_reserved_sidecar",
+                )
 
-            result_with_sidecar = calculate_resource_utilization(
-                cpu_request_service=cpu_request_service_new,
-                memory_request_service=memory_request_service_new,
-                memory_reserved_k8s=memory_reserved_k8s_new,
-                cpu_request_sidecar=cpu_reserved_sidecar,
-                memory_request_sidecar=memory_reserved_sidecar,
-            )
-            display_resource_table(result_with_sidecar)
-            evaluate_resource_provision(
-                cpu_request_service_new, memory_request_service_new, result_with_sidecar
-            )
+            try:
+                result_with_sidecar = calculate_resource_utilization(
+                    cpu_request_service=cpu_request_service_new,
+                    memory_request_service=memory_request_service_new,
+                    memory_reserved_k8s=memory_reserved_k8s_new,
+                    cpu_request_sidecar=cpu_reserved_sidecar,
+                    memory_request_sidecar=memory_reserved_sidecar,
+                )
+                display_resource_table(result_with_sidecar)
+                evaluate_resource_provision(
+                    cpu_request_service_new,
+                    memory_request_service_new,
+                    result_with_sidecar,
+                )
+            except ValueError as exc:
+                st.error(str(exc))
 
 
 if __name__ == "__main__":

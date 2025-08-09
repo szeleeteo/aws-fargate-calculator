@@ -1,7 +1,7 @@
 [project]
-name = "eks-fargate-calculator"
+name = "aws-fargate-calculator"
 version = "0.1.0"
-description = "Add your description here"
+description = "Calculate and optimize AWS Fargate resource requests vs. provisioned tiers"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

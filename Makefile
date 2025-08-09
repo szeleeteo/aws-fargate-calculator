@@ -24,6 +24,3 @@ check: ## Run code checks with Ruff
 
 run: ## Run the app
 	uv run streamlit run src/main.py
-
-
-

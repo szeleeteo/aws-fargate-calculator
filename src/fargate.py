@@ -69,11 +69,11 @@ RESOURCES_TABLE_CAPTION = "Based on [AWS Docs Reference](https://docs.aws.amazon
 PER_VCPU_COST_PER_HOUR = 0.05056
 PER_GB_COST_PER_HOUR = 0.00553
 FARGATE_PRICING_MD = f"""\
-                | Resource            | Price                     |
-                |---------------------|---------------------------|
-                | per vCPU per hour   | ${PER_VCPU_COST_PER_HOUR} |
-                | per GB per hour     | ${PER_GB_COST_PER_HOUR}   |
-                """
+| Resource            | Price                      |
+|---------------------|----------------------------|
+| per vCPU per hour   | \${PER_VCPU_COST_PER_HOUR} |
+| per GB per hour     | \${PER_GB_COST_PER_HOUR}   |
+"""
 FARGATE_PRICING_CAPTION = "Based on [AWS Fargate Pricing](https://aws.amazon.com/fargate/pricing/) for **Linux/x86, Asia Pacific (Singapore) region**"
 
 

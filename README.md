@@ -7,4 +7,17 @@ Calculate and optimize AWS Fargate resources requests and provisions.
 3. Python3.11 or later
 
 ## Local Development
-1. make run
+1. Install dependencies and pre-commit hooks:
+
+   ```sh
+   make init
+   ```
+
+2. Run the app:
+
+   ```sh
+   make run
+   ```
+
+
+The app starts Streamlit and serves `src/main.py`.
