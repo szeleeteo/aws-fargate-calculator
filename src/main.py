@@ -68,7 +68,7 @@ def display_resource_table(provision_result: list[Resource]):
 
     result_display_df = result_df.drop(["cpu", "memory"], axis=1)
     result_display_df = result_display_df[:3]
-    st.dataframe(result_display_df, use_container_width=True, hide_index=True)
+    st.dataframe(result_display_df, width="stretch", hide_index=True)
 
 
 def evaluate_resource_provision(
